@@ -21,12 +21,12 @@ async def save_group(bot, message):
             await bot.send_message(LOG_CHANNEL, script.NEW_GROUP_TXT.format(message.chat.title, message.chat.id, message.chat.username, group_link, total, user), disable_web_page_preview=True)  
             await db.add_chat(message.chat.id, message.chat.title)
             btn = [[
-                InlineKeyboardButton('🦸‍♀️  sᴜᴘᴘᴏʀᴛ  🦸‍♀️', url="https://telegram.me/TechifySupport")
+                InlineKeyboardButton('Support', url="https://telegram.me/iPopcornbotNews")
             ]]
             reply_markup=InlineKeyboardMarkup(btn)
             await bot.send_message(
                 chat_id=message.chat.id,
-                text=f"<b>☤ ᴛʜᴀɴᴋ ʏᴏᴜ ꜰᴏʀ ᴀᴅᴅɪɴɢ ᴍᴇ ɪɴ {message.chat.title}\n\n🕵️ ɪꜰ ʏᴏᴜ ʜᴀᴠᴇ ᴀɴʏ ᴅᴏᴜʙᴛ ᴛʜᴇɴ ᴄʟᴇᴀʀ ɪᴛ ᴜsɪɴɢ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ",
+                text=f"<b>Thank you for adding me in {message.chat.title}\n\nIf you have any doubt then clear it using below button",
                 reply_markup=reply_markup
             )
 
@@ -34,32 +34,32 @@ async def save_group(bot, message):
 async def leave_a_chat(bot, message):
     r = message.text.split(None)
     if len(message.command) == 1:
-        return await message.reply('<b>ᴜꜱᴇ ᴛʜɪꜱ ᴄᴏᴍᴍᴀɴᴅ ʟɪᴋᴇ ᴛʜɪꜱ `/leave -100******`</b>')
+        return await message.reply('<b>Use this command like this `/leave -100******`</b>')
     if len(r) > 2:
         reason = message.text.split(None, 2)[2]
         chat = message.text.split(None, 2)[1]
     else:
         chat = message.command[1]
-        reason = "ɴᴏ ʀᴇᴀꜱᴏɴ ᴘʀᴏᴠɪᴅᴇᴅ..."
+        reason = "No reason provided..."
     try:
         chat = int(chat)
     except:
         chat = chat
     try:
         btn = [[
-            InlineKeyboardButton('👨‍💻  ᴏᴡɴᴇʀ', url=USERNAME)
+            InlineKeyboardButton('Owner', url=USERNAME)
         ]]
         reply_markup=InlineKeyboardMarkup(btn)
         await bot.send_message(
             chat_id=chat,
-            text=f'😞 ʜᴇʟʟᴏ ᴅᴇᴀʀ,\nᴍʏ ᴏᴡɴᴇʀ ʜᴀꜱ ᴛᴏʟᴅ ᴍᴇ ᴛᴏ ʟᴇᴀᴠᴇ ꜰʀᴏᴍ ɢʀᴏᴜᴘ ꜱᴏ ɪ ɢᴏ 😔\n\n🚫 ʀᴇᴀꜱᴏɴ ɪꜱ - <code>{reason}</code>\n\nɪꜰ ʏᴏᴜ ɴᴇᴇᴅ ᴛᴏ ᴀᴅᴅ ᴍᴇ ᴀɢᴀɪɴ ᴛʜᴇɴ ᴄᴏɴᴛᴀᴄᴛ ᴍʏ ᴏᴡɴᴇʀ 👇',
+            text=f'Hello dear,\nMy owner has told me to leave from group so I go.\n\nReason is - <code>{reason}</code>\n\nIf you need to add me again then contact my owner below.',
             reply_markup=reply_markup,
         )
         await bot.leave_chat(chat)
         await db.delete_chat(chat)
-        await message.reply(f"<b>ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ʟᴇꜰᴛ ꜰʀᴏᴍ ɢʀᴏᴜᴘ - `{chat}`</b>")
+        await message.reply(f"<b>Successfully left from group - `{chat}`</b>")
     except Exception as e:
-        await message.reply(f'<b>🚫 ᴇʀʀᴏʀ - `{e}`</b>')
+        await message.reply(f'<b>Error - `{e}`</b>')
 
 @Client.on_message(filters.command('groups') & filters.user(ADMINS))
 async def list_groups(bot, message):
