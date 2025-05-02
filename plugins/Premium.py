@@ -14,7 +14,7 @@ from pyrogram.errors.exceptions.bad_request_400 import MessageTooLong
 async def add_premium(client, message):
     try:
         _, user_id, time, *custom_message = message.text.split(" ", 3)
-        custom_message = "𝑻𝒉𝒂𝒏𝒌𝒔 𝑭𝒐𝒓 𝑻𝒂𝒌𝒊𝒏𝒈 𝑺𝒖𝒃𝒔𝒄𝒓𝒊𝒑𝒕𝒊𝒐𝒏" if not custom_message else " ".join(custom_message)
+        custom_message = "Thanks For Taking Subscription" if not custom_message else " ".join(custom_message)
         time_zone = datetime.datetime.now(pytz.timezone("Asia/Kolkata"))
         current_time = time_zone.strftime("%d-%m-%Y : %I:%M:%S %p")
         user = await client.get_users(user_id)
@@ -26,9 +26,9 @@ async def add_premium(client, message):
             data = await db.get_user(user.id)
             expiry = data.get("expiry_time")
             expiry_str_in_ist = expiry.astimezone(pytz.timezone("Asia/Kolkata")).strftime("%d-%m-%Y  :  %I:%M:%S %p")
-            await message.reply_text(f"Premium access added to the user\n\n👤 User: {user.mention}\n\n🪙 user id: <code>{user_id}</code>\n\n⏰ premium access: {time}\n\n🎩 Joining : {current_time}\n\n⌛️ Expiry: {expiry_str_in_ist}", disable_web_page_preview=True)
-            await client.send_message(chat_id=user_id, text=f"<b>{user.mention},\n\nᴘʀᴇᴍɪᴜᴍ ᴀᴅᴅᴇᴅ ᴛᴏ ʏᴏᴜʀ ᴀᴄᴄᴏᴜɴᴛ ᴇɴᴊᴏʏ 💥\n\nᴘʀᴇᴍɪᴜᴍ ᴀᴄᴄᴇss - {time}\n\nᴊᴏɪɴɪɴɢ - {current_time}\n\nᴇxᴘɪʀᴇ ɪɴ - {expiry_str_in_ist}</b>\n\n{custom_message}", disable_web_page_preview=True)
-            await client.send_message(LOG_CHANNEL, text=f"#Added_Premium\n\n👤 User - {user.mention}\n\n🪙 Id - <code>{user_id}</code>\n\n⏰ Premium access - {time}\n\n🎩 Joining - {current_time}\n\n⌛️ Expiry - {expiry_str_in_ist}\n\n{custom_message}", disable_web_page_preview=True)
+            await message.reply_text(f"Premium access added to the user\n\nUser: {user.mention}\n\nUser ID: <code>{user_id}</code>\n\nPremium access: {time}\n\nJoining: {current_time}\n\nExpiry: {expiry_str_in_ist}", disable_web_page_preview=True)
+            await client.send_message(chat_id=user_id, text=f"<b>{user.mention},\n\nPremium added to your account. Enjoy!\n\nPremium Access - {time}\n\nJoining - {current_time}\n\nExpire In - {expiry_str_in_ist}</b>\n\n{custom_message}", disable_web_page_preview=True)
+            await client.send_message(LOG_CHANNEL, text=f"#Added_Premium\n\nUser - {user.mention}\n\nID - <code>{user_id}</code>\n\nPremium Access - {time}\n\nJoining - {current_time}\n\nExpiry - {expiry_str_in_ist}\n\n{custom_message}", disable_web_page_preview=True)
         else:
             await message.reply_text("<b>⚠️ Invalid format, use this format - <code>/addpremium 1030335104 1day</code>\n\n<u>Time format -</u>\n\n<code>1 day for day\n1 hour for hour\n1 min for minutes\n1 month for month\n1 year for year</code>\n\nChange as your wish like 2, 3, 4, 5 etc....</b>")
     except ValueError:
@@ -42,13 +42,13 @@ async def remove_premium(client, message):
         user_id = int(message.command[1])
         user = await client.get_users(user_id)
         if await db.remove_premium_access(user_id):
-            await message.reply_text("<b>sᴜᴄᴄᴇssꜰᴜʟʟʏ ʀᴇᴍᴏᴠᴇᴅ ✅</b>")
+            await message.reply_text("Successfully removed.")
             await client.send_message(
                 chat_id=user_id,
-                text=f"<b>ʜʏ {user.mention},\n\n⚠️ ʏᴏᴜʀ ᴘʀᴇᴍɪᴜᴍ ᴀᴄᴄᴇss ʜᴀs ʙᴇᴇɴ ʀᴇᴍᴏᴠᴇᴅ 🚫</b>"
+                text=f"Hi {user.mention},\n\nYour premium access has been removed."
             )
         else:
-            await message.reply_text("<b>👀 ᴜɴᴀʙʟᴇ ᴛᴏ ʀᴇᴍᴏᴠᴇ, ᴀʀᴇ ʏᴏᴜ sᴜʀᴇ ɪᴛ ᴡᴀs ᴀ ᴘʀᴇᴍɪᴜᴍ ᴜsᴇʀ ɪᴅ??</b>")
+            await message.reply_text("Unable to remove. Are you sure it was a premium user ID?")
     else:
         await message.reply_text("Usage: <code>/removepremium user_id</code>")
 
@@ -67,14 +67,14 @@ async def myplan(client, message):
         hours, remainder = divmod(time_left.seconds, 3600)
         minutes, seconds = divmod(remainder, 60)
         time_left_str = f"{days} days, {hours} hours, {minutes} minutes"
-        await message.reply_text(f"#Premium_Info:\n\n👤 User: {user}\n\n🪙 User Id: <code>{user_id}</code>\n\n⏰ Time Left: {time_left_str}\n\n⌛️ Expiry: {expiry_str_in_ist}.")   
+        await message.reply_text(f"#Premium_Info:\n\nUser: {user}\n\nUser ID: <code>{user_id}</code>\n\nTime Left: {time_left_str}\n\nExpiry: {expiry_str_in_ist}.")   
     else:
-        await message.reply_text(f"<b>{user},\n\nʏᴏᴜ ᴅᴏ ɴᴏᴛ ʜᴀᴠᴇ ᴀɴʏ ᴀᴄᴛɪᴠᴇ ᴘʀᴇᴍɪᴜᴍ ᴘʟᴀɴs, ɪꜰ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ ᴛᴀᴋᴇ ᴘʀᴇᴍɪᴜᴍ ᴛʜᴇɴ ᴄʜᴇᴄᴋ /plan ꜰᴏʀ ᴍᴏʀᴇ ᴅᴇᴛᴀɪʟs...</b>")
-        
+        await message.reply_text(f"{user},\n\nYou do not have any active premium plans. If you want to take premium then check /plan for more details...")
+
 @Client.on_message(filters.command("checkplan") & filters.user(ADMINS))
 async def check_plan(client, message):
     if len(message.text.split()) == 1:
-        await message.reply_text("use this command with user id... like\n\n /checkplan user_id")
+        await message.reply_text("Use this command with user ID... like\n\n /checkplan user_id")
         return
     user_id = int(message.text.split(' ')[1])
     user_data = await db.get_user(user_id)
@@ -96,7 +96,7 @@ async def check_plan(client, message):
             f"Expiry Time: {time_left_str}"
         )
     else:
-        response = "User have not a premium..."
+        response = "User does not have premium..."
     await message.reply_text(response)
 
 @Client.on_message(filters.command('plan') & filters.incoming)
@@ -106,11 +106,11 @@ async def plan(client, message):
         user_info = f"@{message.from_user.username}"
     else:
         user_info = f"{message.from_user.mention}"
-    log_message = f"#Plan\n\n<b>🚫 ᴛʜɪs ᴜsᴇʀ ᴛʀʏ ᴛᴏ ᴄʜᴇᴄᴋ ᴘʟᴀɴ\n\n- ɪᴅ - `{user_id}`\n- ɴᴀᴍᴇ - {user_info}</b>"
+    log_message = f"#Plan\n\nThis user tried to check plan\n\n- ID - `{user_id}`\n- Name - {user_info}"
     btn = [[
-        InlineKeyboardButton("📸  sᴇɴᴅ sᴄʀᴇᴇɴsʜᴏᴛ  📸", url=USERNAME),
+        InlineKeyboardButton("Send Screenshot", url=USERNAME),
     ],[
-        InlineKeyboardButton("🗑  ᴄʟᴏsᴇ  🗑", callback_data="close_data")
+        InlineKeyboardButton("Close", callback_data="close_data")
     ]]
     await client.send_message(LOG_CHANNEL, log_message)
     r=await message.reply_photo(
